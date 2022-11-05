@@ -19,7 +19,7 @@ const Header = () => {
                 &nbsp; cart
               </Nav.Link>
               </LinkContainer>
-              <LinkContainer to='/signIn'>
+              <LinkContainer to='/login'>
               <Nav.Link >
                           <i className="fa-solid fa-user"></i> SignIn
                           </Nav.Link>

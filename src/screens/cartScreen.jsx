@@ -13,26 +13,19 @@ const CartScreen = () => {
     const dispatch = useDispatch();
     const searchParams = new URLSearchParams(location.search);
     const qty=searchParams.get('qty')?searchParams.get('qty'):1
-  
-    useEffect(() => {
-        if(id){
-           dispatch(addToCart(id,qty))
-      }  
-    },[dispatch,id,qty])
+
   const cart = useSelector(state => state.cart)
   const { cartItems } = cart;
 
   const removeFromCartHandler = (_id) => {
-    console.log(_id,'ttttttttttttt')
     if (_id) {
       dispatch(removeFromCart(_id,qty))
     }
   }
-
   const checkout = () => {
     navigate('/login?redirect=shipping')
   }
-
+  
   return (
     <>
       <Row>
@@ -60,7 +53,7 @@ const CartScreen = () => {
                            Price : ${+item.price * +item.qty}
                           </Col>
                           <Col md={2}>
-                            
+                            Quantity : 
                           <Form.Control as='Select'  value={item.qty} onChange={(e)=>dispatch(addToCart(item.product,+(e.target.value)))}>
                                           {
                                 [...Array(item.countInStock).keys()].map(x => { return <option key={x + 1} value={x + 1}>{x+1}</option>}

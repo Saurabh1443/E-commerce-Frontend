@@ -3,6 +3,8 @@ import { Card } from 'react-bootstrap'
 import Rating from '../components/Rating'
 import {Link} from 'react-router-dom'
 import './productScreen.css'
+
+
 const ProductScreen = ({Product}) => {
   return (
       <div className="effect">

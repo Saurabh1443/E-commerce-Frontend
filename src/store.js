@@ -3,9 +3,13 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { productListReducer } from './reducers/productReducer'
 import { cartReducer } from './reducers/cartReducer'
+import { userLoginReducer } from './reducers/userReducer'
+
+
 const reducer = combineReducers({
     productList: productListReducer,
-    cart:cartReducer
+    cart: cartReducer,
+    userLogin:userLoginReducer
 });
 
 const cartItemFromStorage = localStorage.getItem('cartItems')?JSON.parse(localStorage.getItem('cartItems')):[]
