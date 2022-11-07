@@ -14,7 +14,7 @@ const CartScreen = () => {
     const searchParams = new URLSearchParams(location.search);
     const qty=searchParams.get('qty')?searchParams.get('qty'):1
 
-  const cart = useSelector(state => state.cart)
+  const { cart,userLogin } = useSelector(state => state)
   const { cartItems } = cart;
 
   const removeFromCartHandler = (_id) => {
@@ -23,7 +23,13 @@ const CartScreen = () => {
     }
   }
   const checkout = () => {
-    navigate('/login?redirect=shipping')
+ 
+    if (userLogin&&userLogin.token) {
+      navigate('/shipping')
+    } else {
+      navigate('/login/?redirect=/shipping')
+     }
+    
   }
   
   return (

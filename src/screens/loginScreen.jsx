@@ -19,7 +19,7 @@ const LoginScreen = () => {
     const { loading, error, userInfo } = userLogin
     const searchParams = new URLSearchParams(location.search);
     const redirect=searchParams.get('redirect')?searchParams.get('redirect'):'/'
-console.log(redirect,'iiiiiii')
+
      
     const submitHandler = (e) => {
         e.preventDefault();
@@ -34,13 +34,13 @@ console.log(redirect,'iiiiiii')
             
         }
         else {
-            
             dispatch(login(email,password))
         }
            
        }
     useEffect(() => {
-        if (userInfo){}
+        
+        if (userInfo){navigate(redirect)}
         else {
             if (error) {
                 console.log('error')
@@ -56,7 +56,7 @@ console.log(redirect,'iiiiiii')
                 <h3>{message}</h3>
             </Alert>}
             <FormContainer>
-                <h1>SIGN IN</h1>
+                <h1>User Login</h1>
                 {loading&&<Loader />}
                 <Form onSubmit={submitHandler}>
                     <Form.Group controlId='email'>
@@ -73,7 +73,7 @@ console.log(redirect,'iiiiiii')
                 <Row>
                     <Col>
                         New Customer ?
-                        <Link to={redirect?`register?redirect=${redirect}`:'/register'}>Register</Link>
+                        <Link to={redirect?`/register?redirect=${redirect}`:'/register'}>Register</Link>
                     </Col>
                 </Row>
             </FormContainer>
