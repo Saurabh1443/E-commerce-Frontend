@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./productScreen.css";
 import { API_URL } from "../request";
+import Previous from "../components/previous";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -40,13 +41,7 @@ const ProductDetails = () => {
   };
   return (
     <div>
-      <Button
-        style={{ color: "black", background: "none" }}
-        onClick={() => navigate(-1)}
-      >
-        <i className="fas fa-arrow-left" />
-        &nbsp; Go Back
-      </Button>
+      <Previous>Product Details</Previous>
 
       <Row>
         <Col

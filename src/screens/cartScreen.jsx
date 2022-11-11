@@ -4,6 +4,7 @@ import {Row,Col,Form,Button,Card,Image,ListGroup, ListGroupItem} from 'react-boo
 import { addToCart, removeFromCart } from '../actions/cartAction';
 import { useParams,useNavigate ,useLocation } from 'react-router';
 import {Link} from 'react-router-dom';
+import Previous from '../components/previous';
 
 
 const CartScreen = () => {
@@ -34,9 +35,10 @@ const CartScreen = () => {
   
   return (
     <>
+      <Previous>Shopping Cart</Previous>
       <Row>
         <Col md={8}>
-          <h1>Shopping Cart</h1>
+          
           {
             cartItems.length === 0 ? (
               <h3>Your cart is empty 

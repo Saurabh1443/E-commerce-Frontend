@@ -3,35 +3,46 @@ import { Row, Col, Form, Button, Card, Image, ListGroup, ListGroupItem } from 'r
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { createOrder } from '../actions/orderAction';
+import { CREATE_ORDER_FAIL, CREATE_ORDER_SUCCESS } from '../constants/orderConstants';
+import Previous from '../components/previous';
 
 
 
 const PlaceOrderScreen = () => {
-    const {cart,placeOrder} = useSelector(state=>state)
+    const {cart} = useSelector(state=>state)
     const dispatch = useDispatch();
     const navigate = useNavigate()
     
-    const { order} = placeOrder
     
-    const goForOrder = () => {
-        dispatch(createOrder({
+    
+    const goForOrder = async() => {
+        const {data,error,success} = await createOrder(({
             orderItems: cart.cartItems,
             shippingAddress: cart.shippingAddress,
-            paymentMethod:'stripe',
             itemsPrice: cart.itemsPrice,
+            paymentMethod: "paypal",
             taxPrice: cart.taxPrice,
             totalPrice: cart.totalPrice,
             eligibleForFreeShipping: cart.eligibleForFreeShipping,
             shippingPrice:cart.shippingPrice
-        }))
-
+        }));
+        
+        if (!error) {
+            dispatch({
+                type: CREATE_ORDER_SUCCESS,
+                payload:data
+            })
+            navigate(`/payment/${data._id}`)
+        }
+        else {
+            dispatch({
+                type: CREATE_ORDER_FAIL,
+                payload:{error,success,data}
+            }) 
+        }
     }
-   useEffect(() => {
-     
-    if (order&&order.success) {
-        navigate(`/thankYou`);
-    } 
-   }, [order])
+
+    
    
     
     const addDecimal = (num) => {
@@ -44,18 +55,15 @@ const PlaceOrderScreen = () => {
     cart.eligibleForFreeShipping= +cart.itemsPrice>500?true:false
   return (
       <>
+          <Previous>Order Summary</Previous>
           <Row>
-              <div style={{display:'flex',justifyContent:'space-between'}}>
-              <Link to='/' style={{ textDecoration: 'none', color: 'green', paddingBottom: '3px', fontSize: '20px' }}>   <i className="fa-solid fa-arrow-left"></i> Back to home page</Link>
-              <Button type='button' variant='warning' style={{padding:'3px'}}  className='mt--2'  onClick={()=>navigate('/cart')}>Add More Items</Button>
-              </div>
               
           <Col md={6}>
                   <ListGroup>
                   <ListGroup.Item>
-                          <h2>Order Details</h2>
+                          
                           {cart && cart.cartItems && cart.cartItems.length > 0 ? (
-                              <ListGroup >
+                              <ListGroup variant='flush' >
                                   {
                                       cart && cart.cartItems.map((item, ind) => {
                                           return (
@@ -92,34 +100,32 @@ const PlaceOrderScreen = () => {
                               <strong>
                                   Address Line 1 : 
                               </strong>
-                              &nbsp; {cart.shippingAddress.address}
+                              &nbsp; {cart.shippingAddress&&cart.shippingAddress.address}
                              
                           </p>
                           <p>
                               <strong>
                                   City : 
                               </strong>
-                              {cart.shippingAddress.city}
+                              {cart.shippingAddress&&cart.shippingAddress.city}
                              
                           </p>
                           <p>
                               <strong>
                                   Postal Code : 
                               </strong>
-                              {cart.shippingAddress.postalCode}
+                              {cart.shippingAddress&&cart.shippingAddress.postalCode}
                              
                           </p>
                           <p>
                               <strong>
                                   Country : 
                               </strong>
-                              {cart.shippingAddress.country}
+                              {cart.shippingAddress&&cart.shippingAddress.country}
                           </p>
                          
                       </ListGroup.Item>
-                      <ListGroupItem>
-                      <span><h3>Payment Method </h3> : {cart.paymentMethod} </span>
-                      </ListGroupItem>
+                     
                   </ListGroup>
               </Col>
               <Col md={3}>
@@ -156,7 +162,7 @@ const PlaceOrderScreen = () => {
                                   <Col>${cart.totalPrice}</Col>
                               </Row>
                           </ListGroup.Item>
-                          <Button type='button' variant='success' className='btn-block' disabled={!cart.cartItems} onClick={goForOrder}>Place Order </Button>
+                          <Button type='button' variant='success' className='btn-block' disabled={!cart.cartItems} onClick={goForOrder}>Continue &nbsp; <i class="fa-solid fa-arrow-right"></i> </Button>
                       </ListGroup>
                   </Card>
                  

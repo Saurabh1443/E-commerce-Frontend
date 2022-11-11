@@ -1,8 +1,8 @@
 import React,{useState,useEffect} from "react";
 import {Link, useNavigate,useParams} from 'react-router-dom'
-import { Form, Button, Row, Col, Table } from "react-bootstrap";
+import { Form, Button, Row, Col, Table, ListGroup, ListGroupItem, Card } from "react-bootstrap";
 import Loader from '../components/shared/Loader'
-import { profileDetails } from "../actions/userAction";
+import { profileDetails,updateUserDetails } from "../actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -30,24 +30,29 @@ const ProfileScreen = () => {
             if (!user) {
                 dispatch(profileDetails(userInfo._id))
             } else {
-                setName(user.name);
-                setEmail(user.email);
+                setName(userInfo.name);
+                setEmail(userInfo.email);
             }
         }
-    }, [userInfo, user, dispatch])
+    }, [user])
     
-    const submitHandler = (e) => {
-        e.preventDEfault();
+  const submitHandler = (e) => {
+    window.stop();
+      console.log(e)
+      e.preventDEfault();
+      // dispatch(updateUserDetails(userInfo._id, name));
     }
 
     return (
         <>
-        <Row>
-          <Col md={3}>
-            <h1>Update Information</h1>
-            <Form onSubmit={submitHandler}>
+        <div style={{display:'flex',justifyContent:'space-between'}}>
+        
+          <div >
+          <h3>Edit Profile</h3>
+            
+              <Form onSubmit={submitHandler}>
               <Form.Group controlId="email">
-                <Form.Label>Name</Form.Label>
+                <Form.Label>Your Name</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="enter Name"
@@ -61,70 +66,27 @@ const ProfileScreen = () => {
                   type="email"
                   placeholder="enter email"
                   value={email}
+                  disabled={true}
                   onChange={(e) => setEmail(e.target.value)}
                 ></Form.Control>
               </Form.Group>
-              <Button type="submit" variant="primary">
+              <Button style={{ marginTop: '10px' }} onClick={() => { window.stop(); console.log('clicked')}} className="btn-block" type="submit" variant="success">
                 Update
               </Button>
             </Form>
-          </Col>
-          {/* <Col md={9}>
-            <h1>My Orders</h1>
-            {loadingOrders ? (
-              <Loader />
-            ) : errorOrders ? (
-              <Message variant="danger">{errorOrders}</Message>
-            ) : (
-              <Table striped bordered hover responsive className="table-sm">
-                <thead>
-                  <tr>
-                    <td>ID</td>
-                    <td>DATE</td>
-                    <td>TOTAL</td>
-                    <td>PAID</td>
-                    <td>DELIVERD</td>
-                    <td></td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders.map((order) => (
-                    <tr key={order._id}>
-                      <td>{order._id}</td>
-                      <td>{order.createdAt.substring(0, 10)}</td>
-                      <td>{order.totalPrice}</td>
-                      <td>
-                        {order.isPaid ? (
-                          order.paidAt.substring(0, 10)
-                        ) : (
-                          <i
-                            className="fas fa-times"
-                            style={{ color: "red" }}
-                          ></i>
-                        )}
-                      </td>
-                      <td>
-                        {order.isDeleverd ? (
-                          order.deleverdAt.substring(0, 10)
-                        ) : (
-                          <i
-                            className="fas fa-times"
-                            style={{ color: "red" }}
-                          ></i>
-                        )}
-                      </td>
-                      <td>
-                        <LinkContainer to={`/order/${order._id}`}>
-                          <Button variant="light">Details</Button>
-                        </LinkContainer>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            )}
-          </Col> */}
-        </Row>
+             
+          </div>
+          <div>
+          <Button onClick={()=>navigate('/myOrders')} variant='warning' style={{borderRadius:"10px"}}>
+                  My Orders
+            </Button>&nbsp;
+            <Button onClick={()=>navigate('/cart')} variant='warning' style={{borderRadius:"10px"}}>
+                  My Wishlist
+                </Button>
+           
+              
+            </div>
+        </div>
       </>
     )
 }

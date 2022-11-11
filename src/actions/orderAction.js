@@ -3,38 +3,29 @@ import {
     API_URL,getToken
 } from "../request";
 
-import { CREATE_ORDER_FAIL, CREATE_ORDER_SUCCESS, CREATE_ORDER_REQUEST } from "../constants/orderConstants";
+import { CREATE_ORDER_FAIL, CREATE_ORDER_SUCCESS, CREATE_ORDER_REQUEST,PLACE_ORDER_SUCCESS } from "../constants/orderConstants";
 
-
-export const createOrder = (order) => async (dispatch, getState) => {
-
+export const createOrder = async(order)  => {
+  
     try {
-        dispatch({
-            type:CREATE_ORDER_REQUEST,
-        })
-        
-            const {
-                data
-        } = await axios.post(`${API_URL}/placeOrder`, order, getToken());
-
-            if (data && !data.error) {
-                dispatch({
-                    type: CREATE_ORDER_SUCCESS,
-                    payload: data
-                })
-            } else {
-                dispatch({
-                    type: CREATE_ORDER_FAIL,
-                    payload:data
-                })
-            }
-           
+       
+        const {
+            data
+        } = await axios.post(`${API_URL}/placeOrder`,order,
+            getToken());
+        return data
     } catch (err) {
-        err.message = 'unauthorized user'
-        
-        dispatch({
-            type: CREATE_ORDER_FAIL,
-            payload:err
-        })
+        throw err
     }
+}
+
+export const placeOrder = (data) => async(dispatch, getState) => {
+    getState().cart.paymentMethod = data
+    
+
+    dispatch({
+        type: PLACE_ORDER_SUCCESS,
+        payload:getState().cart
+    })
+    localStorage.setItem('paymentMethod',JSON.stringify(data))
 }

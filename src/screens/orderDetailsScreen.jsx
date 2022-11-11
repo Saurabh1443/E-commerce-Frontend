@@ -1,11 +1,12 @@
 import axios from 'axios';
 import React from 'react'
 import { useEffect,useState } from 'react';
-import { Row, Col, Form, Button, Image, ListGroup, } from 'react-bootstrap'
+import { Row, Col, Card,Button, Image, ListGroup, ListGroupItem, } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate,useParams} from 'react-router-dom';
 import { API_URL, getToken } from '../request';
 import moment from 'moment'
+import Previous from '../components/previous';
 
 
 const OrderDetailsScreen = () => {
@@ -15,12 +16,18 @@ const OrderDetailsScreen = () => {
     const [individualOrder, setIndividualOrder] = useState({});
     const [orderedAt, setOrderedAt] = useState('');
     const [deliveredAt, setDeliveredAt] = useState('');
+    const [isPaid, setIsPaid] = useState(false);
+    const [paymentMethod, setPaymentMethod] = useState(false);
+
     useEffect(() => {
         const fetchOrderDetails = async() => {
             const { data: { doc, error, success } } = await axios.get(`${API_URL}/orders/specific`, { params: { id1,id2 } ,...getToken()} );
             if (doc && doc.length && success) {
-                setDeliveredAt(doc.deliveredAt);
-                setOrderedAt(doc.orderedAt);
+                console.log(doc)
+                setPaymentMethod(doc[0].paymentMethod)
+                setIsPaid(doc[0].isPaid)
+                setDeliveredAt(doc[0].deliveredAt);
+                setOrderedAt(doc[0].orderedAt);
                 let xx = doc[0].orderItems&&doc[0].orderItems.filter(vv => vv.product === id2)[0];
                 xx.brand = xx.name.split(' ')[0];
                 setIndividualOrder(xx)
@@ -31,24 +38,22 @@ const OrderDetailsScreen = () => {
     }, [id1, id2])
     
     const getNoOfDays = () => {
-    console.log(moment(deliveredAt).format('l'),'dddddddddd')
+         console.log(deliveredAt)
         return ((new Date(moment(deliveredAt).format('l')).getTime() - new Date(moment(orderedAt).format('l')).getTime()) / (1000 * 3600 * 24));
     }
    
 
   return (
       <>
-          <Row>
-          <ListGroup variant="flush">
-            <ListGroup.Item>
-                      <h5>Order ID - { id1}</h5>
-            </ListGroup.Item>
-           
-           
+          <Previous>Order Details</Previous>
+          <Row >
+          <ListGroup variant="flush" >
+            <ListGroup.Item >
+                      <h5>Order ID - {id1}</h5>
+                     
+                  </ListGroup.Item>
               </ListGroup>
-          </Row>
-          <Row>
-          <Col  md={3}
+              <Col  md={3}
                   >
               <ListGroup>
              
@@ -60,7 +65,7 @@ const OrderDetailsScreen = () => {
                        
                   </ListGroup>
                   </Col> 
-              <Col md={5}>
+              <Col md={6}>
               <ListGroup>
               <Link style={{textDecoration:"none"}} to={`/product/${id2}`} ><ListGroup.Item>
                           <h3>{individualOrder.name}</h3>
@@ -73,10 +78,25 @@ const OrderDetailsScreen = () => {
                       <ListGroup.Item>
                         Delivered In : {getNoOfDays()} days 
                       </ListGroup.Item>
+                      <ListGroup.Item>
+                        Payment Status : {isPaid===true?"Paid":"Not Paid"}
+                      </ListGroup.Item>
+                      <ListGroup.Item>
+                        Payment Method : {paymentMethod}
+                      </ListGroup.Item>
             <ListGroup.Item style={{color:"green"}}>Note : The Ordered item has been successfully delivered at your door step . Hope to see you soon</ListGroup.Item>
      </ListGroup>
-     </Col>
-      </Row>
+              </Col>
+              {!isPaid&&<Col md={3}>
+              <div>
+                      <h5>Pay now and ask the delivery agent to drop the item at doorstep .</h5>
+                  <Link to={`/payment/${id1}`}><Button type='button' style={{backgroundColor:'#FF9900',padding:'5px',borderRadius:"5px"}}>Pay Now</Button></Link>    
+              </div>
+              </Col>}
+          </Row>
+      
+
+    
       </>
   )
 }

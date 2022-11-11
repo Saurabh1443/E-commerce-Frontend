@@ -30,6 +30,12 @@ export const cartReducer = (state={cartItems:[]},action) => {
                 ...state,
                 paymentMethod:action.payload
             }
+        case "DELETE_CART":
+            return {
+                ...state,
+                cartItems: [],
+                shippingAddress:{}
+            }
         default:
             return state;
     }

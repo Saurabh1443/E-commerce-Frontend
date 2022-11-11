@@ -9,7 +9,9 @@ import {
     USER_REGISTER_FAIL,
     USER_DETAILS_REQUEST,
     USER_DETAILS_SUCCESS,
-    USER_DETAILS_FAIL
+    USER_DETAILS_FAIL,
+    USER_UPDATE_SUCCESS,
+    USER_UPDATE_FAIL
 } from "../constants/userConstants";
 import { API_URL,getToken } from "../request";
 
@@ -86,7 +88,7 @@ export const profileDetails = (id) =>async(dispatch)=>  {
             type:USER_DETAILS_REQUEST
         })
         const { data } = await axios.get(`${API_URL}/profile/${id}`, getToken());
-   console.log(data,'iiiiiiiiiii')
+   
         if (data && !data.error) {
             dispatch({
                 type: USER_DETAILS_SUCCESS,
@@ -104,5 +106,31 @@ export const profileDetails = (id) =>async(dispatch)=>  {
         
     } catch (err) {
         console.log(err)
+    }
+}
+
+export const updateUserDetails = (_id, name) => async (dispatch) => {
+    try {
+        console.log(name,'yyyyyyyyyyyyyy')
+        const {data}=await axios.put(`${API_URL}/profile/update`,{_id,name},
+            getToken())
+        
+        if (data && !data.error) {
+            dispatch({
+                type: USER_UPDATE_SUCCESS,
+                payload:data
+            })
+        }
+        else {
+            dispatch({
+                type: USER_UPDATE_FAIL,
+                payload:data
+            }) 
+        }
+    } catch (err) {
+        dispatch({
+            type: USER_UPDATE_FAIL,
+            payload:err
+        })
     }
 }
