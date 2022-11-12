@@ -1,0 +1,23 @@
+.main-container{
+    height: max-content;
+    width: max-content;
+    background-image: url('../../public/images/Background.jpg');
+ 
+
+}
+.sub-container-1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+ .image1{
+    position:relative;
+    top:-15px;
+    border-radius: 0px;
+}
+.image2{
+    margin-top:20px
+}
+.image-last{
+    margin-bottom: 20px;
+}

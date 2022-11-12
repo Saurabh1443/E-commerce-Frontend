@@ -43,7 +43,7 @@ const MyOrdersScreen = () => {
                                   {
                                         orderDetails && orderDetails.map((item, ind) => item && item.orderItems.map((vv,ind2) => {
                                             return (
-                                                <ListGroup.Item action onClick={()=>navigate(`/order/${item._id}/${vv.product}`)} key={ind2 + 1}>
+                                                <ListGroup.Item action onClick={()=>navigate(`/order/${item._id}/${vv._id}`)} key={ind2 + 1}>
                                                     <Row  >
                                                         <Col md={2}>
                                                             <Image src={vv.image} alt={vv.name} fluid/>
@@ -56,7 +56,7 @@ const MyOrdersScreen = () => {
                                                             $ {vv.price}
                                                         </Col>
                                                         <Col md={2}>    
-                                                            <Link to={`/order/${item._id}/${vv.product}`} style={{ textDecoration: 'none', color: 'green',  fontSize: '20px' }}><i className="fa-solid fa-arrow-right"></i></Link>
+                                                            <Link to={`/order/${item._id}/${vv._id}`} style={{ textDecoration: 'none', color: 'green',  fontSize: '20px' }}><i className="fa-solid fa-arrow-right"></i></Link>
                                                         </Col>
                                                     </Row>
                                                 </ListGroup.Item>

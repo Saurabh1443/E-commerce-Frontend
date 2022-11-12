@@ -6,12 +6,13 @@ import { placeOrder } from '../actions/orderAction'
 import axios from 'axios'
 
 function PaymentScreen() {
+    
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const { id } = useParams();
     const {cart,userLogin:{userInfo:email,name}} = useSelector(state => state)
     const { shippingAddress } = cart
-    console.log(id)
+    
     if (!(cart&&cart.cartItems.length)) {
         navigate('/shipping')
     }
@@ -52,12 +53,13 @@ function PaymentScreen() {
             
             
         }
-        checkoutHandler(500)
+        checkoutHandler(cart.totalPrice)
     },[id])
 
   return (
       <>
           <h1>Select Payment Method </h1>
+
 
           
       </>

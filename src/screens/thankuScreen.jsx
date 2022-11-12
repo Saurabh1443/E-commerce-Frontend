@@ -2,14 +2,12 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
-import { deleteCart } from '../actions/cartAction';
+
 
 const ThankYouScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    localStorage.removeItem('cartItems');
-    dispatch(deleteCart());
         setTimeout(() => {
            navigate('/myOrders') 
         },5000)

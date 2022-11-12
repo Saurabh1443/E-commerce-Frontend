@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Row,
   Col,
@@ -8,6 +8,7 @@ import {
   Image,
   ListGroupItem,
   Form,
+  Modal
 } from "react-bootstrap";
 import { useParams } from "react-router";
 import Rating from "../components/Rating";
@@ -15,16 +16,19 @@ import { addToCart } from "../actions/cartAction";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./productScreen.css";
-import { API_URL } from "../request";
+import { API_URL, getToken } from "../request";
 import Previous from "../components/previous";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const [product, setProduct] = useState({});
-
+  const [showModal, setShowModal] = useState(false);
   const [qty, setQty] = useState(1);
   const navigate = useNavigate();
+  
+  const {userLogin:{userInfo}} = useSelector(state=>state)
+
   useEffect(() => {
     async function fetchData() {
       const { data } = await axios.get(`${API_URL}/product/${id}`);
@@ -34,15 +38,22 @@ const ProductDetails = () => {
     }
     fetchData();
   }, [id]);
+  const handleClose = () => {
+  setShowModal(false)
+}
 
-  const addToCartHandler = () => {
-    dispatch(addToCart(id, qty));
-    navigate(`/cart/${id}/?qty=${qty}`);
+  const addToCartHandler = async () => {
+    const {data:{error,msg}} = await axios.put(`${API_URL}/addToCart`, { User: userInfo._id, productId: id, Qty: qty }, getToken());
+    console.log(error)
+    if (!error) {
+      setShowModal(true);
+    } else {
+      alert(msg)
+    }
   };
   return (
     <div>
       <Previous>Product Details</Previous>
-
       <Row>
         <Col
           md={6}
@@ -118,6 +129,25 @@ const ProductDetails = () => {
           </ListGroup>
         </Col>
       </Row>
+      <Modal
+        show={showModal}
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header >
+          <Modal.Title><i style={{color:'#4bbf73'}} class="fa-solid fa-circle-check"></i> Hooray! 1 item successfully added to the cart</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        Product : {product.name}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary"style={{Color:'#FF9900',padding:'5px',borderRadius:"5px"}} onClick={handleClose}>
+            Close
+          </Button>
+          <Button onClick={() => { handleClose(); navigate(`/cart/${id}/?qty=${qty}`)}} variant="success" style={{padding:'5px',borderRadius:"5px"}}>GO TO CART</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

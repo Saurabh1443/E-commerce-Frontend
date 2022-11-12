@@ -23,12 +23,13 @@ const OrderDetailsScreen = () => {
         const fetchOrderDetails = async() => {
             const { data: { doc, error, success } } = await axios.get(`${API_URL}/orders/specific`, { params: { id1,id2 } ,...getToken()} );
             if (doc && doc.length && success) {
+                console.log(doc,'ffffffffff')
                 console.log(doc)
                 setPaymentMethod(doc[0].paymentMethod)
                 setIsPaid(doc[0].isPaid)
                 setDeliveredAt(doc[0].deliveredAt);
                 setOrderedAt(doc[0].orderedAt);
-                let xx = doc[0].orderItems&&doc[0].orderItems.filter(vv => vv.product === id2)[0];
+                let xx = doc[0].orderItems&&doc[0].orderItems.filter(vv => vv._id === id2)[0];
                 xx.brand = xx.name.split(' ')[0];
                 setIndividualOrder(xx)
             }
@@ -87,12 +88,15 @@ const OrderDetailsScreen = () => {
             <ListGroup.Item style={{color:"green"}}>Note : The Ordered item has been successfully delivered at your door step . Hope to see you soon</ListGroup.Item>
      </ListGroup>
               </Col>
-              {!isPaid&&<Col md={3}>
-              <div>
+              <Col md={3}>
+              {!isPaid?<div>
                       <h5>Pay now and ask the delivery agent to drop the item at doorstep .</h5>
                   <Link to={`/payment/${id1}`}><Button type='button' style={{backgroundColor:'#FF9900',padding:'5px',borderRadius:"5px"}}>Pay Now</Button></Link>    
-              </div>
-              </Col>}
+                  </div> : <div>  <h5>The Ordered item has been successfully delivered at your door step . Continue shopping</h5>
+                  <Link to={`/`}><Button type='button' style={{backgroundColor:'green',padding:'10px',borderRadius:"5px"}}>Continue Shopping</Button></Link></div>
+            
+                  }
+              </Col>
           </Row>
       
 

@@ -18,6 +18,7 @@ import ThankYouScreen from './screens/thankuScreen';
 import MyOrdersScreen from './screens/myOrdersScreen';
 import OrderDetailsScreen from './screens/orderDetailsScreen';
 import PaymentSuccessScreen from './screens/paymentSuccessScreen';
+import AboutScreen from './screens/aboutScreen';
 
 function App() {
   const userLogin = useSelector(state => state.userLogin)
@@ -42,6 +43,7 @@ function App() {
             <Route path='/myOrders' element={<MyOrdersScreen />} exact />
             <Route path='/order/:id1/:id2' element={<OrderDetailsScreen />} exact />
             <Route path='/paymentSuccess' element={<PaymentSuccessScreen />} exact />
+            <Route path='/about' element={<AboutScreen />} exact />
           </Routes>
           
       </Container>
